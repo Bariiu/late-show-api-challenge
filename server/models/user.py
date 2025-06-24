@@ -2,20 +2,15 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from server.app import db # Assuming db is initialized in app.py
+from server.app import db
 
-# Define the User model
 class User(db.Model):
-    # Set the table name
     __tablename__ = 'users'
 
-    # Define columns
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    # Store the hashed password, not the plain text password
     _password_hash = db.Column(db.String(128), nullable=False)
 
-    # Hybrid property for password hashing and checking
     @hybrid_property
     def password_hash(self):
         """Prevents direct access to the password hash"""
