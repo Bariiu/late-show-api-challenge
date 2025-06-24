@@ -31,3 +31,34 @@ class Appearance(db.Model):
         if not guest_id:
             raise ValueError("Guest ID is required.")
         return guest_id
+
+    @validates('episode_id')
+    def validate_episode_id(self, key, episode_id):
+        """Ensures episode_id is present"""
+        if not episode_id:
+            raise ValueError("Episode ID is required.")
+        return episode_id
+
+    def __repr__(self):
+        return f'<Appearance {self.id} | Rating: {self.rating}>'
+
+    def to_dict(self, include_guest=False, include_episode=False):
+        """
+        Returns a dictionary representation of the appearance.
+        Optionally includes associated guest and episode data.
+        """
+        appearance_dict = {
+            "id": self.id,
+            "rating": self.rating,
+            "guest_id": self.guest_id,
+            "episode_id": self.episode_id,
+        }
+        if include_guest and self.guest:
+            appearance_dict['guest'] = self.guest.to_dict()
+        if include_episode and self.episode:
+            appearance_dict['episode'] = {
+                "id": self.episode.id,
+                "date": self.episode.date.isoformat() if self.episode.date else None,
+                "number": self.episode.number,
+            }
+        return appearance_dict
