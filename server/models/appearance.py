@@ -24,3 +24,10 @@ class Appearance(db.Model):
         if not (1 <= rating <= 5):
             raise ValueError("Rating must be between 1 and 5.")
         return rating
+
+    @validates('guest_id')
+    def validate_guest_id(self, key, guest_id):
+        """Ensures guest_id is present"""
+        if not guest_id:
+            raise ValueError("Guest ID is required.")
+        return guest_id
