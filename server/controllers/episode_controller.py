@@ -32,3 +32,11 @@ def get_episode(id):
         ]
     })
 
+
+@episode_bp.route("/<int:id>", methods=["DELETE"])
+@jwt_required()
+def delete_episode(id):
+    episode = Episode.query.get_or_404(id)
+    db.session.delete(episode)
+    db.session.commit()
+    return jsonify({"message": "Episode deleted"}), 200
